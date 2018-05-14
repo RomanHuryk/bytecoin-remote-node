@@ -1,0 +1,47 @@
+P2p/NetNode.h:  struct P2pConnectionContext : public CryptoNoteConnectionContext {
+P2p/NetNode.h:    P2pConnectionContext(System::Dispatcher& dispatcher, Logging::ILogger& log, System::TcpConnection&& conn) :
+P2p/NetNode.h:    P2pConnectionContext(P2pConnectionContext&& ctx) : 
+P2p/NetNode.h:    int handleCommand(const LevinProtocol::Command& cmd, BinaryArray& buff_out, P2pConnectionContext& context, bool& handled);
+P2p/NetNode.h:    int handle_handshake(int command, COMMAND_HANDSHAKE::request& arg, COMMAND_HANDSHAKE::response& rsp, P2pConnectionContext& context);
+P2p/NetNode.h:    int handle_timed_sync(int command, COMMAND_TIMED_SYNC::request& arg, COMMAND_TIMED_SYNC::response& rsp, P2pConnectionContext& context);
+P2p/NetNode.h:    int handle_ping(int command, COMMAND_PING::request& arg, COMMAND_PING::response& rsp, P2pConnectionContext& context);
+P2p/NetNode.h:    int handle_get_stat_info(int command, COMMAND_REQUEST_STAT_INFO::request& arg, COMMAND_REQUEST_STAT_INFO::response& rsp, P2pConnectionContext& context);
+P2p/NetNode.h:    int handle_get_network_state(int command, COMMAND_REQUEST_NETWORK_STATE::request& arg, COMMAND_REQUEST_NETWORK_STATE::response& rsp, P2pConnectionContext& context);
+P2p/NetNode.h:    int handle_get_peer_id(int command, COMMAND_REQUEST_PEER_ID::request& arg, COMMAND_REQUEST_PEER_ID::response& rsp, P2pConnectionContext& context);
+P2p/NetNode.h:    bool handshake(CryptoNote::LevinProtocol& proto, P2pConnectionContext& context, bool just_take_peerlist = false);
+P2p/NetNode.h:    bool handleTimedSyncResponse(const BinaryArray& in, P2pConnectionContext& context);
+P2p/NetNode.h:    void forEachConnection(std::function<void(P2pConnectionContext&)> action);
+P2p/NetNode.h:    void on_connection_new(P2pConnectionContext& context);
+P2p/NetNode.h:    void on_connection_close(P2pConnectionContext& context);
+P2p/NetNode.h:    bool try_ping(basic_node_data& node_data, P2pConnectionContext& context);
+P2p/NetNode.h:    typedef std::unordered_map<boost::uuids::uuid, P2pConnectionContext, boost::hash<boost::uuids::uuid>> ConnectionContainer;
+P2p/NetNode.h:    void connectionHandler(const boost::uuids::uuid& connectionId, P2pConnectionContext& connection);
+P2p/NetNode.h:    void writeHandler(P2pConnectionContext& ctx);
+P2p/NetNode.cpp:  // P2pConnectionContext implementation
+P2p/NetNode.cpp:  bool P2pConnectionContext::pushMessage(P2pMessage&& msg) {
+P2p/NetNode.cpp:  std::vector<P2pMessage> P2pConnectionContext::popBuffer() {
+P2p/NetNode.cpp:  uint64_t P2pConnectionContext::writeDuration(TimePoint now) const { // in milliseconds
+P2p/NetNode.cpp:  void P2pConnectionContext::interrupt() {
+P2p/NetNode.cpp:  int invokeAdaptor(const BinaryArray& reqBuf, BinaryArray& resBuf, P2pConnectionContext& ctx, Handler handler) {
+P2p/NetNode.cpp:  int NodeServer::handleCommand(const LevinProtocol::Command& cmd, BinaryArray& out, P2pConnectionContext& ctx, bool& handled) {
+P2p/NetNode.cpp:  bool NodeServer::handshake(CryptoNote::LevinProtocol& proto, P2pConnectionContext& context, bool just_take_peerlist) {
+P2p/NetNode.cpp:    forEachConnection([&](P2pConnectionContext& conn) {
+P2p/NetNode.cpp:  bool NodeServer::handleTimedSyncResponse(const BinaryArray& in, P2pConnectionContext& context) {
+P2p/NetNode.cpp:  void NodeServer::forEachConnection(std::function<void(P2pConnectionContext&)> action) {
+P2p/NetNode.cpp:      P2pConnectionContext ctx(m_dispatcher, logger.getLogger(), std::move(connection));
+P2p/NetNode.cpp:      P2pConnectionContext& connectionContext = iter->second;
+P2p/NetNode.cpp:  int NodeServer::handle_get_stat_info(int command, COMMAND_REQUEST_STAT_INFO::request& arg, COMMAND_REQUEST_STAT_INFO::response& rsp, P2pConnectionContext& context)
+P2p/NetNode.cpp:  int NodeServer::handle_get_network_state(int command, COMMAND_REQUEST_NETWORK_STATE::request& arg, COMMAND_REQUEST_NETWORK_STATE::response& rsp, P2pConnectionContext& context)
+P2p/NetNode.cpp:  int NodeServer::handle_get_peer_id(int command, COMMAND_REQUEST_PEER_ID::request& arg, COMMAND_REQUEST_PEER_ID::response& rsp, P2pConnectionContext& context)
+P2p/NetNode.cpp:    forEachConnection([&](P2pConnectionContext& conn) {
+P2p/NetNode.cpp:  bool NodeServer::try_ping(basic_node_data& node_data, P2pConnectionContext& context) {
+P2p/NetNode.cpp:  int NodeServer::handle_timed_sync(int command, COMMAND_TIMED_SYNC::request& arg, COMMAND_TIMED_SYNC::response& rsp, P2pConnectionContext& context)
+P2p/NetNode.cpp:  int NodeServer::handle_handshake(int command, COMMAND_HANDSHAKE::request& arg, COMMAND_HANDSHAKE::response& rsp, P2pConnectionContext& context)
+P2p/NetNode.cpp:  int NodeServer::handle_ping(int command, COMMAND_PING::request& arg, COMMAND_PING::response& rsp, P2pConnectionContext& context)
+P2p/NetNode.cpp:  void NodeServer::on_connection_new(P2pConnectionContext& context)
+P2p/NetNode.cpp:  void NodeServer::on_connection_close(P2pConnectionContext& context)
+P2p/NetNode.cpp:        P2pConnectionContext ctx(m_dispatcher, logger.getLogger(), m_listener.accept());
+P2p/NetNode.cpp:        P2pConnectionContext& connection = iter->second;
+P2p/NetNode.cpp:        auto now = P2pConnectionContext::Clock::now();
+P2p/NetNode.cpp:  void NodeServer::connectionHandler(const boost::uuids::uuid& connectionId, P2pConnectionContext& ctx) {
+P2p/NetNode.cpp:  void NodeServer::writeHandler(P2pConnectionContext& ctx) {
